@@ -1,0 +1,26 @@
+{
+  "name": "escuela",
+  "version": "1.0.0",
+  "description": "practica de crud de una escuela",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Revan",
+  "license": "ISC",
+  "dependencies": {
+    "@types/body-parser": "^1.16.8",
+    "@types/method-override": "0.0.31",
+    "@types/mongoose": "^5.0.9",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.3",
+    "method-override": "^2.3.10",
+    "mongoose": "^5.0.14",
+    "npm": "^5.8.0"
+  },
+  "devDependencies": {
+    "@types/morgan": "^1.7.35",
+    "morgan": "^1.9.0",
+    "nodemon": "^1.17.3"
+  }
+}
