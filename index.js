@@ -7,6 +7,7 @@ const bodyParser = require("body-parser")
 const methodOverride = require("method-override")
 const mongoose = require("mongoose")
 const studentsRoutes = require('./routes/students')
+const mattersRoutes = require('./routes/matter')
 //settings
 app.set('json spaces',4)
 //middleware
@@ -24,7 +25,7 @@ app.use((req, res, next) => {
 });
 //routes
 app.use('/students',studentsRoutes)
-
+app.use('/matter',mattersRoutes)
 //conecion a mongo db
 mongoose.connect('mongodb://localhost:27017/school', (err, res) => {
     if (err) {

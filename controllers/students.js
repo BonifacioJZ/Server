@@ -1,5 +1,6 @@
 'use strict'
 const Student = require('../models/student')
+const Matter = require('../models/matter')
 
 function getStudents(req,res) {
     Student.find({},(err,students)=>{
