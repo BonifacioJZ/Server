@@ -81,7 +81,20 @@ function delteMatter(req,res) {
 
 function studentMatter(req, res) {
     let studentId = req.params.idu
-    let matters = { "code":req.body.code, "mattername": req.body.mattername,"qualification":0}
+    let student = {
+        _id:studentId,
+        studentid:req.body.studentid,
+        name:{
+            firstname:req.body.firstname,
+            lastname:req.body.lastname
+        }
+
+    }
+    let matters = { 
+        _id:req.body.idM,
+        "code":req.body.code,
+         "mattername": req.body.mattername,
+         "qualification":0}
     Student.update({ _id: studentId},{$push:{matter:matters}},(err,student)=>{
         if(err) return res.status(500).send({message:`error al agregar la materia ${err}`})
         if(!student) return res.status(404).send({message:`El estudienta no existe`})
