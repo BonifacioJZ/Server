@@ -32,7 +32,14 @@ function postStudent(req,res) {
 }
 function putStudent(req,res) {
     let studentId = req.params.idu
-    let update = req.body
+    let update = {
+        studentid:req.body.studentid,
+        name:{
+            firstname: req.body.firstname,
+            lastname:req.body.lastname
+        },
+        age:req.body.age
+    }
     Student.findByIdAndUpdate(studentId,update,(err,studentUpdate)=>{
         if(err) res.status(500).send({message:`Error al actualizar al estudiante: ${err}`})
         res.status(200).send({student:studentUpdate})
