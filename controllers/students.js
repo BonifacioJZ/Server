@@ -71,15 +71,22 @@ function getStudent(req,res) {
 }
 function delteMatter(req,res) {
     let studentId = req.params.idu
-    Student.update({_id:studentId},{$pull:{matter:{_id:req.body.id}}},(err)=>{
-        if (err) return res.status(500).send({ message: `error al agregar la materia ${err}` })
+    Student.update({_id:studentId},{$pull:{matter:{_id:req.body.idM}}},(err)=>{
+        if (err) return res.status(500).send({ message: `error al eliminar  la materia del alumno ${err}` })
         //if (!student) return res.status(404).send({ message: `El estudienta no existe` })
-        res.status(200).send("materia quitada del estudiante")
+        
+    })
+    Matter.update({ _id: req.body.idM }, { $pull: { alumns : {_id:studentId} }}, (err)=>{
+        if(err) return re.status(500).send({message:`error al quitar al alumno de la materi ${err}`})
+
+        res.status(200).send({message:`El proceso a terminado`})
     })
     
 }
 
 function studentMatter(req, res) {
+
+    console.log(req.body)
     let studentId = req.params.idu
     let student = {
         _id:studentId,
@@ -90,16 +97,24 @@ function studentMatter(req, res) {
         }
 
     }
+    let matterId = req.body.idM
     let matters = { 
-        _id:req.body.idM,
+        _id:matterId,
         "code":req.body.code,
          "mattername": req.body.mattername,
          "qualification":0}
+
+    Matter.update({ _id: matterId }, { $push: { alumns: student } }, (err, matter) => {
+        if (err) return res.status(500).send({ message: `error al agregar a el alumnos ${err}` })
+        if (!matter) return res.status(500).send({ message: `no se encontro la materia` })
+        res.status(200).send({ matter: matter })
+
+    })
     Student.update({ _id: studentId},{$push:{matter:matters}},(err,student)=>{
         if(err) return res.status(500).send({message:`error al agregar la materia ${err}`})
         if(!student) return res.status(404).send({message:`El estudienta no existe`})
-        res.status(200).send({student})
     })
+   
 
 }
 //{'matter.code':"info"},{$inc:{"matter.$.qualification":10}}
