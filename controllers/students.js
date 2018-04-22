@@ -16,8 +16,8 @@ function postStudent(req,res) {
       let student = new Student({
       studentid:req.body.studentid,
       name:{
-          firstname:req.body.name.firstname,
-          lastname:req.body.name.lastname
+          firstname:req.body.firstname,
+          lastname:req.body.lastname
       },
       age:req.body.age,
       matter:[]
@@ -30,8 +30,10 @@ function postStudent(req,res) {
   
     
 }
+//.update({'alumns.studentid':'14092036'},{$set:{'alumns.$.name.firstname':'mario'}},{multi:true})
 function putStudent(req,res) {
     let studentId = req.params.idu
+    let matr = req.body.studentid
     let update = {
         studentid:req.body.studentid,
         name:{
@@ -40,21 +42,38 @@ function putStudent(req,res) {
         },
         age:req.body.age
     }
+    let update2={
+        studentid: req.body.studentid,
+        name: {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname
+        }
+    }
     Student.findByIdAndUpdate(studentId,update,(err,studentUpdate)=>{
-        if(err) res.status(500).send({message:`Error al actualizar al estudiante: ${err}`})
-        res.status(200).send({student:studentUpdate})
+        if(err) return res.status(500).send({message:`Error al actualizar al estudiante: ${err}`})
+        //res.status(200).send({student:studentUpdate})
+    })
+    Matter.update({'alumns.studentid':matr},{$set:{'alumns.$':update2}},{multi:true},(err,student)=>{
+        if (err) return res.status(500).send({ message: `Error al actualizar al estudiante: ${err}` })
+        res.status(200).send({student:student})
+
     })
 
     
 }
 function deleteStudent(req,res) {
     let studentId = req.params.idu
+
     Student.findById(studentId,(err,student)=>{
         if (err) return res.status(500).send({ message: `Error al eliminar el estudiante :${err}` })
         student.remove(err=>{
             if (err) return res.status(500).send({ message: `Error al eliminar el estudiante :${err}` })
-            res.status(202).send({ message: "estudiante eliminado" })
+            
         })
+    })
+    Matter.update({'alumns._id':studentId},{$pull:{alumns:{_id:studentId}}},(err)=>{
+        if(err) res.status(500).send({message:`Error al eliminar el estudiente ${err}`})
+        res.status(202).send({ message: "estudiante eliminado" })
     })
     
 }
@@ -76,7 +95,7 @@ function delteMatter(req,res) {
         //if (!student) return res.status(404).send({ message: `El estudienta no existe` })
         
     })
-    Matter.update({ _id: req.body.idM }, { $pull: { alumns : {_id:studentId} }}, (err)=>{
+    Matter.update({'_id': req.body.idM }, { $pull: { alumns : {_id:studentId} }}, (err)=>{
         if(err) return re.status(500).send({message:`error al quitar al alumno de la materi ${err}`})
 
         res.status(200).send({message:`El proceso a terminado`})
@@ -117,6 +136,7 @@ function studentMatter(req, res) {
    
 
 }
+
 //{'matter.code':"info"},{$inc:{"matter.$.qualification":10}}
 function addQualification(req, res) {
     let studentId = req.params.idu

@@ -9,6 +9,7 @@ router.route('/')
 router.route('/:idu')
     .get(matterCrt.getMatter)
     .put(matterCrt.putMatter)
+    .delete(matterCrt.deleteMatter)
 
 
 module.exports = router

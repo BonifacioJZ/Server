@@ -1,5 +1,6 @@
 'use strict'
 const Matter = require('../models/matter')
+const Student = require('../models/student')
 
 function postMatter(req,res) {
     console.log(req.body)
@@ -41,12 +42,28 @@ function getMatter(req,res) {
 function putMatter(req,res) {
     let matterId = req.params.idu
     let update = req.body
+    let code =req.body.code
+    
     Matter.findByIdAndUpdate(matterId,update,(err,matterUpdate)=>{
         if(err) res.status(500).send({message:`Error al actualizar la materia ${err}`})
 
-        res.status(200).send({matter:matterUpdate})
+        //res.status(200).send({matter:matterUpdate})
+    })
+    Student.update({ 'matter.code': code }, { $set: { 'matter.$.mattername': req.body.mattername}},{multi:true},(err,matter)=>{
+        if(err) res.status(500).send({message:`Error al actualizar ${err}`})
+        res.status(200).send({matter:matter})
+
     })
 
+    
+}
+function deleteMatter(req,res) {
+
+    let matterId = req.params.idu
+    Matter.findByIdAndRemove(matterId,(err)=>{
+        if(err) res.status(500).send({message:`Error al eliminar la materia ${err}`})
+        res.status(200).send({message:`Materia elimindad`})
+    })
     
 }
 
@@ -55,6 +72,7 @@ module.exports ={
     postMatter,
     getMatters,
     getMatter,
-    putMatter
+    putMatter,
+    deleteMatter
     
 }
