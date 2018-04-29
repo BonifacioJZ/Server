@@ -55,6 +55,7 @@ function putStudent(req,res) {
     })
     Matter.update({'alumns.studentid':matr},{$set:{'alumns.$':update2}},{multi:true},(err,student)=>{
         if (err) return res.status(500).send({ message: `Error al actualizar al estudiante: ${err}` })
+        
         res.status(200).send({student:student})
 
     })
@@ -71,7 +72,7 @@ function deleteStudent(req,res) {
             
         })
     })
-    Matter.update({'alumns._id':studentId},{$pull:{alumns:{_id:studentId}}},(err)=>{
+    Matter.update({ 'alumns._id': studentId }, { $pull: { alumns: { _id: studentId } } }, { multi: true },(err)=>{
         if(err) res.status(500).send({message:`Error al eliminar el estudiente ${err}`})
         res.status(202).send({ message: "estudiante eliminado" })
     })
@@ -105,7 +106,7 @@ function delteMatter(req,res) {
 
 function studentMatter(req, res) {
 
-    console.log(req.body)
+   
     let studentId = req.params.idu
     let student = {
         _id:studentId,
@@ -116,12 +117,14 @@ function studentMatter(req, res) {
         }
 
     }
+
     let matterId = req.body.idM
     let matters = { 
         _id:matterId,
         "code":req.body.code,
          "mattername": req.body.mattername,
          "qualification":0}
+    console.log("data"+req.body)
 
     Matter.update({ _id: matterId }, { $push: { alumns: student } }, (err, matter) => {
         if (err) return res.status(500).send({ message: `error al agregar a el alumnos ${err}` })
@@ -140,7 +143,7 @@ function studentMatter(req, res) {
 //{'matter.code':"info"},{$inc:{"matter.$.qualification":10}}
 function addQualification(req, res) {
     let studentId = req.params.idu
-    Student.update({ $and: [{ _id: studentId }, { 'matter.code': req.body.code}]}, { $set: {"matter.$.qualification":req.body.cal}},(err,matter)=>{
+    Student.update({ $and: [{ _id: studentId }, { 'matter._id': req.body.code}]}, { $set: {"matter.$.qualification":req.body.cal}},(err,matter)=>{
         if(err) return res.status(500).send({message:`La calificasion no se pudo cambiar ${err}`})
         res.status(200).send({matter})
 

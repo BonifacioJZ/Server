@@ -14,8 +14,9 @@ router.route('/:idu')
     .get(studentCtr.getStudent)
 router.route('/matter/:idu')
     .put(studentCtr.studentMatter)
-    .delete(studentCtr.delteMatter)
     .post(studentCtr.addQualification)
+router.route('/update/:idu')
+    .put((studentCtr.delteMatter))
     
 
 module.exports = router

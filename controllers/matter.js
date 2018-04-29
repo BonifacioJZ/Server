@@ -8,7 +8,7 @@ function postMatter(req,res) {
         code:req.body.code,
         mattername: req.body.mattername,
         alumns:[],
-        descriptions:req.body.descrip
+        descriptions: req.body.descriptions
     })
 
     matter.save((err,matterStored)=>{
